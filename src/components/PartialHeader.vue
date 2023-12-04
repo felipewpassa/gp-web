@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
+import { useAuth } from '@/stores/auth';
 
+const auth = useAuth();
+const router = useRouter();
+
+function logout() {
+  auth.clear()
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -13,14 +21,39 @@ import { RouterLink } from 'vue-router'
           height="45"
         >
       </RouterLink>
-      <RouterLink to="/login">
-        <button 
+    
+      <div class="d-flex gap-3 px">
+        <RouterLink
+          v-if="auth.isAutheticated()" 
+          class="nav-link link-secondary"
+          :to="{name: 'produtos'}"
+        >
+          Produtos
+        </RouterLink>
+      </div>
+      
+      <template v-if="auth.isAutheticated()">
+        <button
           type="button" 
           class="btn btn-dark"
+          @click="logout"
         >
-          Login
+          Logout
         </button>
-      </RouterLink>
+      </template>
+      <template v-else>
+        <RouterLink 
+          v-if="!auth.isAutheticated()" 
+          :to="{name: 'login'}"
+        >
+          <button 
+            type="button" 
+            class="btn btn-dark"
+          >
+            Login
+          </button>
+        </RouterLink>
+      </template>
     </nav>
   </header>
 </template>
