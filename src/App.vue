@@ -7,7 +7,7 @@ import PartialFooter from './components/PartialFooter.vue'
 <template>
   <PartialHeader />
 
-  <RouterView class="m-5" />
+  <RouterView />
 
   <PartialFooter />
 </template>
