@@ -42,7 +42,7 @@ async function sendProduct() {
     formData.append('description', view.productsPayload.description);
     formData.append('price', view.productsPayload.price.toString());
     formData.append('expiry_date', view.productsPayload.expiry_date);
-    formData.append('image', files.value[0]);
+    formData.append('file', files.value[0]);
     formData.append('category_id', view.productsPayload.category_id.toString());
 
     const response = await productsStore.create(formData)
