@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SpinnerLoader from '@/components/SpinnerLoader.vue'
 
   const props = defineProps<{
     loadingActive?: boolean
@@ -12,10 +13,7 @@
     class="btn btn-dark"
     :disabled="props.loadingActive"
   >
-    <div 
-      v-if="props.loadingActive" 
-      class="spinner-border spinner-border-sm"
-    />
+    <SpinnerLoader :active="props.loadingActive" />
     Entrar
   </button>
 </template>

@@ -24,7 +24,7 @@ export const useAuth = defineStore('auth', () => {
       })
       return data
     } catch (error: any) {
-      console.log(error.response.data)
+      clear()
     }
   }
 

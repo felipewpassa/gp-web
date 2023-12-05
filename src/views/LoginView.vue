@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import http from '@/services/http';
-import {reactive} from 'vue';
+import {reactive, onMounted } from 'vue';
 import ButtonLoader from '@/components/ButtonLoader.vue';
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/stores/auth';
@@ -17,6 +17,12 @@ const view = reactive({
   }
 });
 
+onMounted(async () => {
+  if (auth.isAutheticated()) {
+    await auth.checkToken();
+  }
+});
+
 async function login() {
   view.loginInProcess = true;
   view.loginFail = ''
@@ -25,10 +31,10 @@ async function login() {
     auth.setToken(data.data.token)
     router.push({ name: 'dashboard' })
   } catch (error: any) {
-    view.loginFail = error.response.data.message
+    view.loginInProcess = false;
+    view.loginFail = error?.response?.data?.message ?? error?.message 
     setTimeout(() => {
       view.loginFail = ''
-      console.log('calc')
     }, 3000)
   }
   view.loginInProcess = false;
@@ -93,7 +99,7 @@ async function login() {
       </div>
     </template>
     <template v-else>
-      <h2 class="mx-auto">
+      <h2 class="d-flex justify-content-center my-5">
         Você já fez login!
       </h2>
     </template>

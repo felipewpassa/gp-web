@@ -6,10 +6,14 @@ export const useProducts = defineStore('products', () => {
 
   const auth = useAuth();
 
-  async function get() {
+  async function get(page = 1) {
+    let url = '/products';
+    if (page > 1) {
+      url += '?page=' + page;
+    }
     try {
       const tokenAuth = "Bearer " + auth.token
-      const { data } = await http.get('/products', {
+      const { data } = await http.get(url, {
         headers: {
           Authorization: tokenAuth
         }

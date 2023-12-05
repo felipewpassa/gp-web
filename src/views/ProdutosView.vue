@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useProducts } from '@/stores/products'
 import { ref, onMounted } from 'vue';
+import PageSelector from '@/components/PageSelector.vue';
+import { format, parseISO } from 'date-fns';
 
 interface ApiProduct {
   id: number,
@@ -12,18 +14,50 @@ interface ApiProduct {
   category_id: number
 }
 
+interface ProductView {
+  id: number,
+  name: string,
+  description: string,
+  expiry_date: string,
+  image: string,
+  price: number|string,
+  category_id: number
+}
+
 const products = ref<ApiProduct[]>([]);
+
+const numPages = ref<number>(0);
+const currentPage = ref<number>(1);
+const loaderPaginationDeactive = ref<boolean>(true);
 
 const productsStore = useProducts();
 
-const fetchProducts = async () => {
-  const response = await productsStore.get()
+const fetchProducts = async (page: number) => {
+  const response = await productsStore.get(page)
+  formatData(response.data) 
+  updateList(response.data)
+  numPages.value = response.totalPages ?? 1
+  loaderPaginationDeactive.value = true
   return response.data
 }
 
+const formatData = (apiProducts: ProductView[]) => {
+  apiProducts.forEach((apiProduct) => {
+    const priceBRL = apiProduct.price.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+    apiProduct.price = priceBRL;
+    apiProduct.expiry_date = format(parseISO(apiProduct.expiry_date), 'dd/MM/yyyy');
+  })
+}
+
+const updateList = (productsApi: ApiProduct[]) => {
+  products.value = productsApi;
+}
+
 onMounted(async () => {
-  products.value = await fetchProducts();
-  console.log(await fetchProducts())
+  await fetchProducts(currentPage.value);
 });
 
 const addProduct = () => {
@@ -41,6 +75,12 @@ const deleteProduct = async (productId: number) => {
   if (deletedIndex >= 0) {
     products.value.splice(deletedIndex, 1);
   }
+};
+
+const onPageChange = (page: any) => {
+  loaderPaginationDeactive.value = false
+  currentPage.value = page;
+  fetchProducts(currentPage.value);
 };
 
 </script>
@@ -92,9 +132,12 @@ const deleteProduct = async (productId: number) => {
         </tr>
       </tbody>
     </table>
+    <PageSelector 
+      link="http://localhost:8000/api/v1/produtos"
+      :num-pages="numPages"
+      :current-page="currentPage"
+      :loader-deactive="loaderPaginationDeactive"
+      @page-change="onPageChange"
+    />
   </div>
 </template>
-
-<style>
-@import 'datatables.net-dt';
-</style>
