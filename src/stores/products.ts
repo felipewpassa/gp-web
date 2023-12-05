@@ -38,9 +38,27 @@ export const useProducts = defineStore('products', () => {
     }
   }
 
+
+  async function create(formData: FormData) {
+    try {
+      const tokenAuth = "Bearer " + auth.token
+      const response = http.post('/products', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': tokenAuth
+        },
+      });
+      return response
+    } catch (error: any) {
+      console.error(error.response.data)
+    }
+
+  }
+
   return {
     get,
-    remove
+    remove,
+    create
   }
 
 })

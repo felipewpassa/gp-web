@@ -2,6 +2,7 @@
 import { useProducts } from '@/stores/products'
 import { ref, onMounted } from 'vue';
 import PageSelector from '@/components/PageSelector.vue';
+import FormProductModal from '@/components/FormProductModal.vue';
 import { format, parseISO } from 'date-fns';
 
 interface ApiProduct {
@@ -87,14 +88,9 @@ const onPageChange = (page: any) => {
 
 <template>
   <div class="mx-3 my-3">
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mt-5 mb-4">
       <h2>Produtos</h2>
-      <button
-        class="btn btn-primary" 
-        @click="addProduct"
-      >
-        Novo
-      </button>
+      <FormProductModal /> 
     </div>
 
     <table class="table">
