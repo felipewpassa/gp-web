@@ -92,42 +92,43 @@ const onPageChange = (page: any) => {
       <h2>Produtos</h2>
       <FormProductModal /> 
     </div>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Preço</th>
-          <th>Data de Validade</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="product in products" :key="product.id">
-          <td>{{ product.id }}</td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.price }}</td>
-          <td>{{ product.expiry_date }}</td>
-          <td>
-            <button 
-              class="btn btn-warning btn-sm mx-1"
-              @click="editProduct(product.id)" 
-            >
-              Editar
-            </button>
-            <button 
-              class="btn btn-danger btn-sm mx-1"
-              @click="deleteProduct(product.id)" 
-            >
-              Excluir
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Data de Validade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="product in products" :key="product.id">
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.expiry_date }}</td>
+            <td>
+              <button 
+                class="btn btn-warning btn-sm mx-1"
+                @click="editProduct(product.id)" 
+              >
+                Editar
+              </button>
+              <button 
+                class="btn btn-danger btn-sm mx-1"
+                @click="deleteProduct(product.id)" 
+              >
+                Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <PageSelector 
       link="http://localhost:8000/api/v1/produtos"
       :num-pages="numPages"
