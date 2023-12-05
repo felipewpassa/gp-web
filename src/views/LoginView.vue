@@ -92,7 +92,10 @@ async function login() {
             </div>
   
             <div class="d-flex justify-content-end">
-              <ButtonLoader :loading-active="view.loginInProcess" />
+              <ButtonLoader
+                title="Entrar"
+                :loading-active="view.loginInProcess" 
+              />
             </div>
           </form>
         </div>

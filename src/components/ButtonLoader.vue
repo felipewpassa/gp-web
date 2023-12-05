@@ -2,6 +2,7 @@
 import SpinnerLoader from '@/components/SpinnerLoader.vue'
 
   const props = defineProps<{
+    title: string,
     loadingActive?: boolean
   }>()
 
@@ -14,6 +15,6 @@ import SpinnerLoader from '@/components/SpinnerLoader.vue'
     :disabled="props.loadingActive"
   >
     <SpinnerLoader :active="props.loadingActive" />
-    Entrar
+    {{ props.title }}
   </button>
 </template>
