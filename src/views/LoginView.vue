@@ -44,7 +44,7 @@ async function login() {
 <template>
   <main>
     <template v-if="!auth.isAutheticated()">
-      <div class="col-md-6 mx-auto justify-content-center">
+      <div class="col-md-6 mx-auto justify-content-center my-5">
         <div class="card">
           <div class="card-header ">
             Faça o login

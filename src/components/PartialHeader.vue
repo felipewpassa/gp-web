@@ -22,10 +22,10 @@ function logout() {
         >
       </RouterLink>
     
-      <div class="d-flex gap-3 px">
+      <div class="d-flex gap-3">
         <RouterLink
           v-if="auth.isAutheticated()" 
-          class="nav-link link-secondary"
+          class="nav-link link-secondary text-dark"
           :to="{name: 'produtos'}"
         >
           Produtos
