@@ -61,14 +61,6 @@ onMounted(async () => {
   await fetchProducts(currentPage.value);
 });
 
-const addProduct = () => {
-  
-};
-
-const editProduct = (productId: number) => {
-
-};
-
 const deleteProduct = async (productId: number) => {
   await productsStore.remove(productId)
 
@@ -114,7 +106,8 @@ const onPageChange = (page: any) => {
             <td>
               <button 
                 class="btn btn-warning btn-sm mx-1"
-                @click="editProduct(product.id)" 
+                @click="editProduct(product.id)"
+                disabled
               >
                 Editar
               </button>
