@@ -7,6 +7,7 @@ import { useCategories } from '@/stores/categories'
 const categoriesStore = useCategories()
 
 import { useProducts } from '@/stores/products'
+import type { AxiosError } from 'axios';
 const productsStore = useProducts()
 
 interface ApiCategoryResponse {
@@ -24,10 +25,13 @@ interface ApiProductPayload {
   category_id: number
 }
 
-const view = reactive({
+let view = reactive({
   saveInProcess: false,
-  errorMessage: '',
-  productsPayload: {} as ApiProductPayload,
+  message: {
+    bootstrapColor: '',
+    message: ''
+  },
+  productsPayload: {} as any,
   categories: [] as ApiCategoryResponse[]
 });
 
@@ -40,19 +44,38 @@ async function sendProduct() {
     const formData = new FormData();
     formData.append('name', view.productsPayload.name);
     formData.append('description', view.productsPayload.description);
-    formData.append('price', view.productsPayload.price.toString());
+    formData.append('price', view.productsPayload.price);
     formData.append('expiry_date', view.productsPayload.expiry_date);
     formData.append('file', files.value[0]);
-    formData.append('category_id', view.productsPayload.category_id.toString());
-
+    formData.append('category_id', view.productsPayload.category_id);
     const response = await productsStore.create(formData)
-    console.log('Resposta da API:', response?.data);
 
-  } catch (error: any) {
-    view.errorMessage = error?.message 
+    const msg = response?.data?.message
+
+    ;(() => {
+      view.productsPayload.name = ''
+      view.productsPayload.description = ''
+      view.productsPayload.price = ''
+      view.productsPayload.expiry_date = ''
+      view.productsPayload.category_id = ''
+      files.value = []
+    })()
+    
+    view.message.bootstrapColor = 'success';
+    view.message.message = msg
     setTimeout(() => {
-      view.errorMessage = ''
-    }, 3000)
+      view.message.message = ''
+    }, 5000)
+  } catch (error: any) {
+    if (error.name === 'AxiosError') {
+      const { message, errors } = error.response.data
+      const msgError = Object.values(errors).shift()
+      view.message.bootstrapColor = 'danger';
+      view.message.message = `${message} - ${msgError}`
+    }
+    setTimeout(() => {
+      view.message.message = ''
+    }, 5000)
   }
   view.saveInProcess = false
 }
@@ -207,10 +230,11 @@ const fetchCategories = async () => {
           </div>
           <div class="modal-footer">
             <div 
-              v-if="view.errorMessage"
-              class="border border-danger text-danger fs-6 mt-3 mx-3 p-1" 
+              v-if="view.message.message"
+              :class="view.message.bootstrapColor === 'danger' ? 'text-danger border-danger' : 'text-success border-success'"
+              class="border fs-6 mt-3 mx-3 p-1"
             >
-              {{ view.errorMessage }}
+              {{ view.message.message }}
             </div>
             <ButtonLoader 
               title="Cadastrar"
